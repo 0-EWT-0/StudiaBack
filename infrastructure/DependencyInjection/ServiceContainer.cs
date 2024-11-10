@@ -16,11 +16,20 @@ namespace Infrastructure.DependencyInjection
     {
         public static IServiceCollection InfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<StudiaDBContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("StudiaApiDatabase"))
-            );
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+                          ?? configuration.GetConnectionString("StudiaApiDatabase");
 
-            services.AddAuthentication(options =>
+            Console.WriteLine($"Cadena de conexión utilizada desde serviceContainer: {connectionString}");
+
+
+            services.AddDbContext<StudiaDBContext>(options =>
+            options.UseNpgsql(connectionString, npgsqlOptionsAction =>
+            npgsqlOptionsAction.EnableRetryOnFailure()
+          )
+         );
+
+
+            services.AddAuthentication(options => 
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,6 +50,7 @@ namespace Infrastructure.DependencyInjection
 
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IFolders, FolderRepo>();
+            services.AddScoped<INotes, NoteRepo>();
 
             return services;
         }

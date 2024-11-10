@@ -5,6 +5,9 @@ using System.Security.Claims;
 using Application.Contracts;
 using Application.DTOS;
 using Infrastructure.Repo;
+using Domain.Entities;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers
 {
@@ -15,9 +18,40 @@ namespace WebAPI.Controllers
     {
         private readonly IFolders folder;
 
-        public FolderController(IFolders folder)
+        private readonly StudiaDBContext _studiaDBContext;
+
+
+        public FolderController(IFolders folder, StudiaDBContext context)
         {
             this.folder = folder;
+
+            _studiaDBContext = context;
+        }
+
+        [HttpGet("get")]
+        public async Task<ActionResult> getUserFolders()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized("User unauthorized.");
+            }
+
+            List<FolderEntity> folders;
+
+            try
+            {
+                folders = await _studiaDBContext.Folders
+                    .Where(f => f.id_user_id == int.Parse(userId))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener las carpetas: {ex.Message}");
+            }
+
+            return Ok(folders);
         }
 
         [HttpPost("create")]

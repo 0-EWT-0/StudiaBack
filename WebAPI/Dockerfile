@@ -1,33 +1,32 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# Dockerfile en WebAPI
 
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
+# Etapa de base para el contenedor de la aplicación
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-ENV DB_CONNECTION_STRING="Host=192.168.1.71;Port=5432;Database=StudiaDB;Username=postgres;Password=root"
+ENV DB_CONNECTION_STRING="Host=db;Port=5432;Database=StudiaDB;Username=postgres;Password=root"
 
-
-# This stage is used to build the service project
+# Etapa de compilación
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["infrastructure/Infrastructure.csproj", "infrastructure/"]
+COPY ["../Application/Application.csproj", "Application/"]
+COPY ["../Domain/Domain.csproj", "Domain/"]
+COPY ["../infrastructure/Infrastructure.csproj", "Infrastructure/"]
 RUN dotnet restore "./WebAPI/WebAPI.csproj"
-COPY . .
+COPY .. .
 WORKDIR "/src/WebAPI"
 RUN dotnet build "./WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Etapa de publicación
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Etapa final para ejecución
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
