@@ -18,11 +18,11 @@ namespace Domain.Entities
         public DateTime created_at { get; set; }
 
         [Required]
-        public required string content { get; set; }
+        public required string content { get; set; } = string.Empty;
 
         [ForeignKey("id_folder_id")]
 
-        public FolderEntity Folder {  get; set; }
+        public FolderEntity Folder { get; set; } = null!;
 
     }
 }

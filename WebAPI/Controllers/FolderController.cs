@@ -8,6 +8,7 @@ using Infrastructure.Repo;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Application.DTOS.Responses;
 
 namespace WebAPI.Controllers
 {
@@ -48,7 +49,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al obtener las carpetas: {ex.Message}");
+                return StatusCode(500, $"Error to get the folders: {ex.Message}");
             }
 
             return Ok(folders);
@@ -61,7 +62,7 @@ namespace WebAPI.Controllers
 
             if (userId == null)
             {
-                return Unauthorized("User unauthorized."); 
+                return Unauthorized("User unauthorized.");
             }
 
             try
@@ -74,5 +75,59 @@ namespace WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("delete/{folderId}")]
+        public async Task<ActionResult<FolderResponse>> DeleteFolder(int folderId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized("User unauthorized");
+            }
+
+            try
+            {
+                var response = await folder.DeleteFolderAsync(folderId, int.Parse(userId));
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error deleting folder and notes: {ex.Message}");
+            }
+        }
+
+        [HttpPut("update/{folderId}")]
+        public async Task<ActionResult<FolderResponse>> UpdateFolderName(int folderId, [FromBody] UpdateFolderDTO updateFolderDTO)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized("User unauthorized");
+            }
+
+            try
+            {
+                //var updateFolderDTO = new UpdateFolderDTO { folderId = folderId, newName = newName, isPublic = isPublic };
+
+                var response = await folder.UpdateFolderAsync(updateFolderDTO, int.Parse(userId));
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error updating folder name: {ex.Message}");
+            }
+        }
+
     }
 }

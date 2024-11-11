@@ -1,5 +1,6 @@
 ﻿
 using Application.DTOS;
+using Application.DTOS.Responses;
 
 namespace Application.Contracts
 {

@@ -1,7 +1,9 @@
 ﻿using Application.Contracts;
 using Application.DTOS;
+using Application.DTOS.Responses;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -41,6 +43,58 @@ namespace Infrastructure.Repo
             return new FolderResponse
             {
                 UserId = folder.id_user_id,
+                FolderId = folder.id_folder,
+                Name = folder.name,
+                IsPublic = folder.is_public,
+                CreatedAt = folder.created_at
+            };
+        }
+        public async Task<FolderResponse> DeleteFolderAsync(int folderId, int userId)
+        {
+            var folder = await _dbContext.Folders.Include(f => f.Notes).FirstOrDefaultAsync(f => f.id_folder == folderId && f.id_user_id == userId);
+
+            if (folder == null)
+            {
+                throw new InvalidOperationException("folder not found");
+            }
+
+            _dbContext.Notes.RemoveRange(folder.Notes);
+
+            _dbContext.Folders.Remove(folder);
+
+            await _dbContext.SaveChangesAsync();
+
+            return new FolderResponse
+            {
+                UserId = folder.id_user_id,
+                FolderId = folder.id_folder,
+                Name = folder.name,
+                IsPublic = folder.is_public,
+                CreatedAt = folder.created_at
+            };
+        }
+
+        public async Task<FolderResponse> UpdateFolderAsync(UpdateFolderDTO folderDTO, int userId)
+        {
+            var folder = await _dbContext.Folders.FirstOrDefaultAsync(f => f.id_folder == folderDTO.folderId && f.id_user_id == userId);
+
+            var response = "folder deleted succsesfully";
+
+            if (folder == null)
+            {
+                throw new InvalidOperationException("Folder not found");
+            }
+
+            folder.name = folderDTO.newName;
+
+            folder.is_public = folderDTO.isPublic;
+
+            await _dbContext.SaveChangesAsync();
+
+            return new FolderResponse
+            {
+                Response = response,
+                UserId= folder.id_user_id,
                 FolderId = folder.id_folder,
                 Name = folder.name,
                 IsPublic = folder.is_public,

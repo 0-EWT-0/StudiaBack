@@ -20,8 +20,10 @@ namespace Domain.Entities
         [MaxLength(50)]
         public required string name { get; set; } = string.Empty;
 
-        [ForeignKey("id_user_id")] 
-        public UserEntity User { get; set; }
+        public ICollection<NoteEntity> Notes { get; set; } = new List<NoteEntity>();
+
+        [ForeignKey("id_user_id")]
+        public UserEntity User { get; set; } = null!;
 
     }
 }

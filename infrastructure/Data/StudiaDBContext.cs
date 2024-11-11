@@ -16,15 +16,17 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("users").HasKey(u => u.id_user);
+
             modelBuilder.Entity<FolderEntity>().ToTable("folders").HasKey(f => f.id_folder);
             modelBuilder.Entity<FolderEntity>()
-                .HasOne(f => f.User)
-                .WithMany()
-                .HasForeignKey(f => f.id_user_id);
+               .HasOne(f => f.User)
+               .WithMany()
+               .HasForeignKey(f => f.id_user_id);
+
             modelBuilder.Entity<NoteEntity>().ToTable("notes").HasKey(n => n.id_note);
             modelBuilder.Entity<NoteEntity>()
                 .HasOne(n => n.Folder)
-                .WithMany()
+                .WithMany(f => f.Notes)
                 .HasForeignKey(n => n.id_folder_id);
         }
     }
