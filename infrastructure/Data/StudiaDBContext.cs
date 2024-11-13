@@ -12,6 +12,7 @@ namespace Infrastructure.Data
         public DbSet<UserEntity>Users{get; set; }
         public DbSet<FolderEntity>Folders{get; set; }
         public DbSet<NoteEntity>Notes{get; set; }
+        public DbSet<ResponseEntity>Responses{get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,12 @@ namespace Infrastructure.Data
                 .HasOne(n => n.Folder)
                 .WithMany(f => f.Notes)
                 .HasForeignKey(n => n.id_folder_id);
+
+            modelBuilder.Entity<ResponseEntity>().ToTable("responses").HasKey(r => r.id_response);
+            modelBuilder.Entity<ResponseEntity>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.id_user_id);
         }
     }
 }
