@@ -13,6 +13,7 @@ namespace Infrastructure.Data
         public DbSet<FolderEntity>Folders{get; set; }
         public DbSet<NoteEntity>Notes{get; set; }
         public DbSet<ResponseEntity>Responses{get; set; }
+        public DbSet<MaterialEntity> Materials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,16 @@ namespace Infrastructure.Data
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.id_user_id);
+
+            modelBuilder.Entity<MaterialEntity>().ToTable("material").HasKey(m => m.id_material);
+
+            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.User).WithMany().HasForeignKey(m => m.id_user_id);
+            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Flashcard).WithMany().HasForeignKey(m => m.id_flashcard_id).IsRequired(false);
+            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Exam).WithMany().HasForeignKey(m => m.id_exam_id).IsRequired(false);
+            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Resume).WithMany().HasForeignKey(m => m.id_resume_id).IsRequired(false);
+            
+
+
         }
     }
 }

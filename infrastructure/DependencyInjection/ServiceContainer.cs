@@ -52,6 +52,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IFolders, FolderRepo>();
             services.AddScoped<INotes, NoteRepo>();
             services.AddScoped<IResponse, ResponseRepo>();
+            services.AddScoped<IMaterials, MaterialRepo>();
 
             return services;
         }

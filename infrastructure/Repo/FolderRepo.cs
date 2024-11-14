@@ -26,7 +26,7 @@ namespace Infrastructure.Repo
         {
             if (await FolderExistsAsync(folderDTO.name, userId))
             {
-                throw new InvalidOperationException("A folder with the same name already exists.");
+                throw new InvalidOperationException("User is not auyenticated");
             }
 
             var folder = new FolderEntity
@@ -40,8 +40,11 @@ namespace Infrastructure.Repo
             _dbContext.Folders.Add(folder);
             await _dbContext.SaveChangesAsync();
 
+            var result = "foloder creado";
+
             return new FolderResponse
             {
+                Response = result,
                 UserId = folder.id_user_id,
                 FolderId = folder.id_folder,
                 Name = folder.name,
@@ -78,7 +81,7 @@ namespace Infrastructure.Repo
         {
             var folder = await _dbContext.Folders.FirstOrDefaultAsync(f => f.id_folder == folderDTO.folderId && f.id_user_id == userId);
 
-            var response = "folder deleted succsesfully";
+            var response = "folder updated succsesfully";
 
             if (folder == null)
             {
