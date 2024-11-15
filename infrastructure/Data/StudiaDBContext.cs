@@ -14,6 +14,7 @@ namespace Infrastructure.Data
         public DbSet<NoteEntity>Notes{get; set; }
         public DbSet<ResponseEntity>Responses{get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
+        public DbSet<ExamEntity> Exams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,8 +44,14 @@ namespace Infrastructure.Data
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Flashcard).WithMany().HasForeignKey(m => m.id_flashcard_id).IsRequired(false);
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Exam).WithMany().HasForeignKey(m => m.id_exam_id).IsRequired(false);
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Resume).WithMany().HasForeignKey(m => m.id_resume_id).IsRequired(false);
-            
 
+            modelBuilder.Entity<ExamEntity>().ToTable("exams").HasKey(e => e.id_exam);
+
+            modelBuilder.Entity<ExamEntity>().HasOne(e => e.User).WithMany().HasForeignKey(e => e.id_user_id);
+            modelBuilder.Entity<ExamEntity>().HasOne(e => e.Type).WithMany().HasForeignKey(e => e.id_type_id);
+            modelBuilder.Entity<ExamEntity>().Property(e => e.difficulty).HasConversion<int>();
+
+            modelBuilder.Entity<TypeEntity>().ToTable("types").HasKey(t => t.id_type);
 
         }
     }

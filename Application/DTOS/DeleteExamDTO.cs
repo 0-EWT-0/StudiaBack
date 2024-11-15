@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOS
 {
-    public class DeleteNotesDTO
+    public class DeleteExamDTO
     {
         [Required]
-        public int noteId {  get; set; }
-
+        public int ExamId { get; set; }
     }
 }

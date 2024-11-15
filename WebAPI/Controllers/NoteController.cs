@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
 
         [HttpPut("update/{noteId}")]
 
-        public async Task<ActionResult<NoteResponse>> UpdateNoteContent(int noteId, [FromBody] UpdateNoteDTO updateNoteDto)
+        public async Task<ActionResult<NoteResponse>> UpdateNoteContent([FromBody] UpdateNoteDTO updateNoteDto)
         {
             try
             {

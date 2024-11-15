@@ -40,7 +40,7 @@ namespace Infrastructure.Repo
             _dbContext.Folders.Add(folder);
             await _dbContext.SaveChangesAsync();
 
-            var result = "foloder creado";
+            var result = "folder created succesfully";
 
             return new FolderResponse
             {

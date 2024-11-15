@@ -1,5 +1,6 @@
 ﻿
 
+using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,7 +22,10 @@ namespace Domain.Entities
 
         public string image_url { get; set; } = string.Empty;
 
-        //public enum difficulty exam_difficulty
+        [Required]
+        [Column("difficulty")]
+
+        public ExamDifficulty difficulty { get; set; }
 
         public bool is_public { get; set; }
 
@@ -29,8 +33,9 @@ namespace Domain.Entities
 
         public UserEntity User { get; set; } = null!;
 
-        //[ForeignKey("id_type_id")]
+        [ForeignKey("id_type_id")]
 
-        //public TypeEntity Type { get; set; }
+        public TypeEntity Type { get; set; } = null!;
+
     }
 }

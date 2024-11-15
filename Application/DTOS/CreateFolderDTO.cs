@@ -10,5 +10,6 @@ namespace Application.DTOS
         public string name {  get; set; } = string.Empty;
 
         public bool isPublic { get; set; } = false;
+
     }
 }
