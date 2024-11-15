@@ -53,8 +53,13 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<INotes, NoteRepo>();
             services.AddScoped<IResponse, ResponseRepo>();
             services.AddScoped<IMaterials, MaterialRepo>();
+<<<<<<< HEAD
             services.AddScoped<IExams, ExamRepo>();
 
+=======
+            services.AddScoped<IResumes, ResumeRepo>();
+            services.AddScoped<IFlashcards, FlashcardRepo>();
+>>>>>>> Mascotitas
             return services;
         }
     }

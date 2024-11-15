@@ -14,8 +14,14 @@ namespace Infrastructure.Data
         public DbSet<NoteEntity>Notes{get; set; }
         public DbSet<ResponseEntity>Responses{get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
+<<<<<<< HEAD
         public DbSet<ExamEntity> Exams { get; set; }
+=======
+        
+        public DbSet<ResumeEntity> Resumes { get; set; }
+>>>>>>> Mascotitas
 
+        public DbSet<FlashcardEntity> Flashcards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("users").HasKey(u => u.id_user);
@@ -38,12 +44,29 @@ namespace Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(r => r.id_user_id);
 
+            modelBuilder.Entity<ResumeEntity>().ToTable("resume").HasKey(r => r.id_resume);
+            modelBuilder.Entity<ResumeEntity>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.id_user_id);
+
+            modelBuilder.Entity<FlashcardEntity>().ToTable("flashcards").HasKey(r => r.id_flashcard);
+            modelBuilder.Entity <FlashcardEntity>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.id_user_id);
+
             modelBuilder.Entity<MaterialEntity>().ToTable("material").HasKey(m => m.id_material);
 
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.User).WithMany().HasForeignKey(m => m.id_user_id);
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Flashcard).WithMany().HasForeignKey(m => m.id_flashcard_id).IsRequired(false);
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Exam).WithMany().HasForeignKey(m => m.id_exam_id).IsRequired(false);
             modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Resume).WithMany().HasForeignKey(m => m.id_resume_id).IsRequired(false);
+<<<<<<< HEAD
+=======
+            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Flashcard).WithMany().HasForeignKey(m => m.id_flashcard_id).IsRequired(false);
+
+>>>>>>> Mascotitas
 
             modelBuilder.Entity<ExamEntity>().ToTable("exams").HasKey(e => e.id_exam);
 
