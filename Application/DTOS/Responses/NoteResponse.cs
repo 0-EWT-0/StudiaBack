@@ -4,7 +4,6 @@
     {
         public string Response { get; set; } = string.Empty;
         public int FolderId { get; set; }
-
         public int NoteId { get; set; }
         public string Content { get; set; } = null!;
         public bool IsPublic { get; set; }

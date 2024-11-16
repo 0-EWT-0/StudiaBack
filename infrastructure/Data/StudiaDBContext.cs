@@ -15,10 +15,9 @@ namespace Infrastructure.Data
         public DbSet<ResponseEntity>Responses{get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
         public DbSet<ExamEntity> Exams { get; set; }
-        
         public DbSet<ResumeEntity> Resumes { get; set; }
-
         public DbSet<FlashcardEntity> Flashcards { get; set; }
+        public DbSet<RatingEntity> Ratings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("users").HasKey(u => u.id_user);
@@ -67,6 +66,14 @@ namespace Infrastructure.Data
             modelBuilder.Entity<ExamEntity>().Property(e => e.difficulty).HasConversion<int>();
 
             modelBuilder.Entity<TypeEntity>().ToTable("types").HasKey(t => t.id_type);
+
+            modelBuilder.Entity<RatingEntity>().ToTable("ratings").HasKey(r => r.id_rating);
+
+            modelBuilder.Entity<RatingEntity>().HasOne(r => r.User).WithMany().HasForeignKey(r => r.id_user_id);
+            modelBuilder.Entity<RatingEntity>().HasOne(r => r.Exam).WithMany().HasForeignKey(r => r.id_exam_id).IsRequired(false);
+            modelBuilder.Entity<RatingEntity>().HasOne(r => r.Flashcard).WithMany().HasForeignKey(r => r.id_flashcard_id).IsRequired(false);
+            modelBuilder.Entity<RatingEntity>().HasOne(r => r.Resume).WithMany().HasForeignKey(r => r.id_resume_id).IsRequired(false);
+            modelBuilder.Entity<RatingEntity>().HasOne(r => r.Note).WithMany().HasForeignKey(r => r.id_notes_id).IsRequired(false);
 
         }
     }

@@ -56,6 +56,8 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IExams, ExamRepo>();
             services.AddScoped<IResumes, ResumeRepo>();
             services.AddScoped<IFlashcards, FlashcardRepo>();
+            services.AddScoped<IRating, RatingRepo>();
+
             return services;
         }
     }
