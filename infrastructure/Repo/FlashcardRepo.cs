@@ -33,6 +33,17 @@ namespace Infrastructure.Repo
             _dbContext.Flashcards.Add(flashcard);
             await _dbContext.SaveChangesAsync();
 
+            var material = new MaterialEntity
+            {
+                id_user_id = userId,
+                id_flashcard_id = flashcard.id_flashcard,
+                created_at = DateTime.UtcNow
+            };
+
+            _dbContext.Materials.Add(material);
+            await _dbContext.SaveChangesAsync();
+
+
             return new FlashcardResponse
             {
                 FlashcardId = flashcard.id_flashcard,

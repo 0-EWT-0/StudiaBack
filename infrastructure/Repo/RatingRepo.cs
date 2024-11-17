@@ -18,6 +18,18 @@ namespace Infrastructure.Repo
 
         public async Task<RatingResponse> CreateRatingAsync(CreateRatingDTO ratingDTO, int userId)
         {
+            bool alreadyRated = await _dbContext.Ratings.AnyAsync(r =>
+            r.id_user_id == userId &&
+           (r.id_flashcard_id == (ratingDTO.FlashcardId ?? 0) ||
+            r.id_exam_id == (ratingDTO.ExamId ?? 0) ||
+            r.id_resume_id == (ratingDTO.ResumeId ?? 0) ||
+            r.id_notes_id == (ratingDTO.NoteId ?? 0)));
+
+            if (alreadyRated)
+            {
+                throw new InvalidOperationException("You have already rated this resource.");
+            }
+
             if ((new[] { ratingDTO.FlashcardId, ratingDTO.ExamId, ratingDTO.ResumeId, ratingDTO.NoteId }).Count(id => id != null) != 1)
             {
                 throw new InvalidOperationException("A rating must be associated with exactly one resource.");
@@ -31,10 +43,10 @@ namespace Infrastructure.Repo
             var rating = new RatingEntity
             {
                 id_user_id = userId,
-                id_flashcard_id = ratingDTO.FlashcardId ?? 0,
-                id_exam_id = ratingDTO.ExamId ?? 0,
-                id_resume_id = ratingDTO.ResumeId ?? 0,
-                id_notes_id = ratingDTO.NoteId ?? 0,
+                id_flashcard_id = ratingDTO.FlashcardId,
+                id_exam_id = ratingDTO.ExamId,
+                id_resume_id = ratingDTO.ResumeId,
+                id_notes_id = ratingDTO.NoteId,
                 rating = ratingDTO.Rating,
                 created_at = DateTime.UtcNow
             };
@@ -50,10 +62,13 @@ namespace Infrastructure.Repo
                 RatingId = rating.id_rating,
                 UserId = rating.id_user_id,
                 Rating = rating.rating,
+                //NoteId = rating.id_notes_id,
+                //FlaschardId = rating.id_flashcard_id,
+                //ExamId = rating.id_exam_id,
+                //ResumeId = rating.id_resume_id,
                 CreatedAt = rating.created_at
             };
         }
-
 
         public async Task<List<RatingResponse>> GetRatingsByResourceAsync(int? flashcardId, int? examId, int? resumeId, int? noteId)
         {

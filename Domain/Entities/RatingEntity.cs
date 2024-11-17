@@ -15,13 +15,13 @@ namespace Domain.Entities
 
         public int id_user_id { get; set; }
 
-        public int id_flashcard_id { get; set; }
+        public int ? id_flashcard_id { get; set; }
 
-        public int id_exam_id { get; set; }
+        public int ? id_exam_id { get; set; }
 
-        public int id_resume_id { get; set; }
+        public int ? id_resume_id { get; set; }
 
-        public int id_notes_id { get; set; }
+        public int ? id_notes_id { get; set; }
 
         [Required]
         [Range(1,5)]

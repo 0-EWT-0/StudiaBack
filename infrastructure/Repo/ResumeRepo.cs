@@ -31,6 +31,16 @@ namespace Infrastructure.Repo
             _dbContext.Resumes.Add(resume);
             await _dbContext.SaveChangesAsync();
 
+            var material = new MaterialEntity
+            {
+                id_user_id = userId,
+                id_resume_id = resume.id_resume,
+                created_at = DateTime.UtcNow
+            };
+
+            _dbContext.Materials.Add(material);
+            await _dbContext.SaveChangesAsync();
+
             return new ResumeResponse
             {
                 ResumeId = resume.id_resume,

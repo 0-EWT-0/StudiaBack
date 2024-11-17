@@ -34,6 +34,16 @@ namespace Infrastructure.Repo
             _dbContext.Exams.Add(exam);
             await _dbContext.SaveChangesAsync();
 
+            var material = new MaterialEntity
+            {
+                id_user_id = userId,
+                id_exam_id = exam.id_exam,
+                created_at = DateTime.UtcNow
+            };
+
+            _dbContext.Materials.Add(material);
+            await _dbContext.SaveChangesAsync();
+
             var result = "Exam created successfully";
 
             return new ExamResponse
