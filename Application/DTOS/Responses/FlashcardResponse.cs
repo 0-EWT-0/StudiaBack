@@ -15,5 +15,7 @@ namespace Application.DTOS.Responses
         public string ImageUrl { get; set; } = string.Empty;
         public bool IsPublic { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public int TypeId { get; set; }
     }
 }

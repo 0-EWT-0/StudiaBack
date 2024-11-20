@@ -18,6 +18,8 @@ namespace Infrastructure.Data
         public DbSet<ResumeEntity> Resumes { get; set; }
         public DbSet<FlashcardEntity> Flashcards { get; set; }
         public DbSet<RatingEntity> Ratings { get; set; }
+
+        public DbSet<ReminderEntity> Reminders { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("users").HasKey(u => u.id_user);
@@ -74,6 +76,12 @@ namespace Infrastructure.Data
             modelBuilder.Entity<RatingEntity>().HasOne(r => r.Flashcard).WithMany().HasForeignKey(r => r.id_flashcard_id).IsRequired(false);
             modelBuilder.Entity<RatingEntity>().HasOne(r => r.Resume).WithMany().HasForeignKey(r => r.id_resume_id).IsRequired(false);
             modelBuilder.Entity<RatingEntity>().HasOne(r => r.Note).WithMany().HasForeignKey(r => r.id_notes_id).IsRequired(false);
+
+            modelBuilder.Entity<ReminderEntity>().ToTable("reminders").HasKey(r => r.id_reminder); 
+            modelBuilder.Entity<ReminderEntity>().HasOne(r => r.User).WithMany().HasForeignKey(r => r.id_user_id); modelBuilder.Entity<ReminderEntity>().HasOne(r => r.Exam).WithMany().HasForeignKey(r => r.id_exam_id).IsRequired
+                (false);
+            modelBuilder.Entity<ReminderEntity>().HasOne(r => r.Flashcard).WithMany().HasForeignKey(r => r.id_flashcard_id).IsRequired(false); 
+            modelBuilder.Entity<ReminderEntity>().HasOne(r => r.Resume).WithMany().HasForeignKey(r => r.id_resume_id).IsRequired(false);
 
         }
     }

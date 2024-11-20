@@ -27,7 +27,8 @@ namespace Infrastructure.Repo
                 is_public = flashcardDTO.isPublic,
                 created_at = DateTime.UtcNow,
                 id_user_id = userId,
-                image_url = flashcardDTO.image_url
+                image_url = flashcardDTO.image_url,
+                id_type_id = flashcardDTO.typeId
             };
 
             _dbContext.Flashcards.Add(flashcard);
@@ -51,7 +52,8 @@ namespace Infrastructure.Repo
                 IsPublic = flashcard.is_public,
                 CreatedAt = flashcard.created_at,
                 UserId = flashcard.id_user_id,
-                ImageUrl = flashcard.image_url
+                ImageUrl = flashcard.image_url,
+                TypeId = flashcard.id_type_id
             };
         }
 
@@ -67,6 +69,7 @@ namespace Infrastructure.Repo
             flashcard.content = flashcardDTO.content;
             flashcard.is_public = flashcardDTO.isPublic;
             flashcard.image_url = flashcardDTO.image_url;
+            flashcard.id_type_id = flashcardDTO.typeId;
 
             await _dbContext.SaveChangesAsync();
 
@@ -77,7 +80,8 @@ namespace Infrastructure.Repo
                 IsPublic = flashcard.is_public,
                 CreatedAt = flashcard.created_at,
                 UserId = flashcard.id_user_id,
-                ImageUrl = flashcard.image_url
+                ImageUrl = flashcard.image_url,
+                TypeId = flashcard.id_type_id,
             };
         }
 
@@ -101,6 +105,7 @@ namespace Infrastructure.Repo
                 CreatedAt = flashcard.created_at,
                 UserId = flashcard.id_user_id,
                 ImageUrl = flashcard.image_url,
+                TypeId = flashcard.id_type_id,
                 Response = "flashcard deleted successfully"
             };
         }

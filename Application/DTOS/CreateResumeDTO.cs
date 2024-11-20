@@ -10,5 +10,8 @@ namespace Application.DTOS
         public bool isPublic { get; set; } = false;
 
         public string image_url { get; set; } = string.Empty;
+
+        [Required]
+        public int typeId { get; set; }
     }
 }

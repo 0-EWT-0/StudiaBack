@@ -25,7 +25,8 @@ namespace Infrastructure.Repo
                 is_public = resumeDTO.isPublic,
                 created_at = DateTime.UtcNow,
                 id_user_id = userId,
-                image_url = resumeDTO.image_url
+                image_url = resumeDTO.image_url,
+                id_type_id = resumeDTO.typeId
             };
 
             _dbContext.Resumes.Add(resume);
@@ -48,7 +49,8 @@ namespace Infrastructure.Repo
                 IsPublic = resume.is_public,
                 CreatedAt = resume.created_at,
                 UserId = resume.id_user_id,
-                ImageUrl = resume.image_url
+                ImageUrl = resume.image_url,
+                TypeId = resume.id_type_id
             };
         }
 
@@ -64,6 +66,7 @@ namespace Infrastructure.Repo
             resume.content = resumeDTO.content;
             resume.is_public = resumeDTO.isPublic;
             resume.image_url = resumeDTO.image_url;
+            resume.id_type_id = resumeDTO.typeId;
 
             await _dbContext.SaveChangesAsync();
 
@@ -74,7 +77,8 @@ namespace Infrastructure.Repo
                 IsPublic = resume.is_public,
                 CreatedAt = resume.created_at,
                 UserId = resume.id_user_id,
-                ImageUrl = resume.image_url
+                ImageUrl = resume.image_url,
+                TypeId = resume.id_type_id
             };
         }
 
@@ -98,6 +102,8 @@ namespace Infrastructure.Repo
                 CreatedAt = resume.created_at,
                 UserId = resume.id_user_id,
                 ImageUrl = resume.image_url,
+                TypeId = resume.id_type_id,
+
                 Response = "Resume deleted successfully"
             };
         }

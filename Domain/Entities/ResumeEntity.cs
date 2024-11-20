@@ -11,7 +11,7 @@ namespace Domain.Entities
 
         public int id_user_id { get; set; }
 
-        public int? id_type_id { get; set; }
+        public int id_type_id { get; set; }
 
         public DateTime created_at { get; set; }
 
@@ -25,8 +25,8 @@ namespace Domain.Entities
         [ForeignKey("id_user_id")]
         public UserEntity User { get; set; } = null!;
 
-        //[ForeignKey("id_type_id")]
+        [ForeignKey("id_type_id")]
 
-        //public TypeEntity Type { get; set; }
+        public TypeEntity Type { get; set; }
     }
 }
