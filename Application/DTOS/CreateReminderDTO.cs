@@ -11,9 +11,9 @@ namespace Application.DTOS
     {
         [Required]
         public int userId { get; set; }
-        public int? examId { get; set; }
-        public int? flashcardId { get; set; }
-        public int? resumeId { get; set; }
+        public int? examId { get; set; } = null;
+        public int? flashcardId { get; set; } = null ;
+        public int? resumeId { get; set; } = null;
         [Required]
         public DateTime reminderDate{ get; set; }
     }

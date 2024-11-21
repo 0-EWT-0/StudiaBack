@@ -96,25 +96,5 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("exists/{reminderId}")]
-        public async Task<ActionResult<bool>> ReminderExists(int reminderId)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId == null)
-            {
-                return Unauthorized("Usuario no autorizado.");
-            }
-
-            try
-            {
-                var exists = await _reminderService.ReminderExistsAsync(reminderId, int.Parse(userId));
-                return Ok(exists);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al verificar la existencia del recordatorio: {ex.Message}");
-            }
-        }
     }
 }

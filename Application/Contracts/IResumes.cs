@@ -12,9 +12,8 @@ namespace Application.Contracts
     {
         Task<ResumeResponse> CreateResumeAsync(CreateResumeDTO resumeDTO, int userId);
 
-        Task<ResumeResponse> UpdateResumeAsync(UpdateResumeDTO resumeDTO, int userId);
+        Task<ResumeResponse> UpdateResumeAsync(UpdateResumeDTO resumeDTO, int userId, int resumeId);
 
         Task<ResumeResponse> DeleteResumeAsync(int resumeId, int userId);
-        Task<bool> ResumeExistsAsync(string content, int userId);
     }
 }

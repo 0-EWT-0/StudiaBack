@@ -22,9 +22,9 @@ namespace Infrastructure.Repo
             var reminder = new ReminderEntity
             {
                 id_user_id = userId,
-                id_exam_id = reminderDTO.examId,
-                id_flashcard_id = reminderDTO.flashcardId,
-                id_resume_id = reminderDTO.resumeId,
+                id_exam_id = reminderDTO.examId != 0 ? reminderDTO.examId : null,
+                id_flashcard_id = reminderDTO.flashcardId != 0 ? reminderDTO.flashcardId : null,
+                id_resume_id = reminderDTO.resumeId != 0 ? reminderDTO.resumeId : null,
                 reminder_date = reminderDTO.reminderDate
             };
 
@@ -52,9 +52,9 @@ namespace Infrastructure.Repo
                 throw new InvalidOperationException("Reminder not found or does not belong to the user");
             }
 
-            reminder.id_exam_id = reminderDTO.examId;
-            reminder.id_flashcard_id = reminderDTO.flashcardId;
-            reminder.id_resume_id = reminderDTO.resumeId;
+            reminder.id_exam_id = reminderDTO.examId != 0 ? reminderDTO.examId : null;
+            reminder.id_flashcard_id = reminderDTO.flashcardId != 0 ? reminderDTO.flashcardId : null;
+            reminder.id_resume_id = reminderDTO.resumeId != 0 ? reminderDTO.resumeId : null;
             reminder.reminder_date = reminderDTO.reminderDate;
 
             await _dbContext.SaveChangesAsync();
@@ -95,10 +95,5 @@ namespace Infrastructure.Repo
             };
         }
 
-        public async Task<bool> ReminderExistsAsync(int reminderId, int userId)
-        {
-            return await _dbContext.Reminders
-                .AnyAsync(r => r.id_reminder == reminderId && r.id_user_id == userId);
-        }
     }
 }

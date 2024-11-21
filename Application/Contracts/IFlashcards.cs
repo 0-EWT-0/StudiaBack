@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Application.Contracts
 {
@@ -12,9 +13,9 @@ namespace Application.Contracts
     {
         Task<FlashcardResponse> CreateFlashcardAsync(CreateFlashcardDTO flashcardDTO, int userId);
 
-        Task<FlashcardResponse> UpdateFlashcardAsync(UpdateFlashcardDTO flashcardDTO, int userId);
+        Task<FlashcardResponse> UpdateFlashcardAsync(UpdateFlashcardDTO flashcardDTO, int userId, int flashcardId);
 
         Task<FlashcardResponse> DeleteFlashcardAsync(int flashcardId, int userId);
-        Task<bool> FlashcardExistsAsync(string content, int userId);
+
     }
 }

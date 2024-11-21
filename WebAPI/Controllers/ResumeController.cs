@@ -26,29 +26,27 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult> GetUserResumes()
+        public async Task<ActionResult> GetResumes()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null)
             {
-                return Unauthorized("Usuario no autorizado.");
+                return Unauthorized("User unauthorized.");
             }
-
-            List<ResumeEntity> resumes;
 
             try
             {
-                resumes = await _studiaDBContext.Resumes
-                    .Where(r => r.id_user_id == int.Parse(userId))
+                var exams = await _studiaDBContext.Resumes
+                    .Where(n => n.id_user_id == int.Parse(userId) )
                     .ToListAsync();
+
+                return Ok(exams);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al obtener los resúmenes: {ex.Message}");
+                return StatusCode(500, $"Error getting exams: {ex.Message}");
             }
-
-            return Ok(resumes);
         }
 
         [HttpPost("create")]
@@ -97,34 +95,26 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("update/{resumeId}")]
-        public async Task<ActionResult<ResumeResponse>> UpdateResumeContent(int resumeId, [FromBody] UpdateResumeDTO updateResumeDTO)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        [HttpPut("update/{resumeId}")] 
+        public async Task<ActionResult<ResumeResponse>> UpdateResume(int resumeId, [FromBody] UpdateResumeDTO updateResumeDTO) 
+        { 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
 
-            if (userId == null)
-            {
-                return Unauthorized("Usuario no autorizado.");
-            }
-
-            try
-            {
-                if (resumeId != updateResumeDTO.ResumeId)
-                {
-                    return BadRequest("El ID proporcionado no coincide con el ID del resumen.");
-                }
-
-                var response = await _resumeService.UpdateResumeAsync(updateResumeDTO, int.Parse(userId));
+            if (userId == null) 
+            { 
+                return Unauthorized("Usuario no autorizado."); 
+            } 
+            try 
+            { 
+                var response = await _resumeService.UpdateResumeAsync(updateResumeDTO, int.Parse(userId), resumeId); 
                 return Ok(response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al actualizar el contenido del resumen: {ex.Message}");
-            }
+            } 
+            catch (InvalidOperationException ex) 
+            { 
+                return NotFound(ex.Message); 
+            } 
+            catch (Exception ex) { return StatusCode(500, $"Error al actualizar el contenido del resumen: {ex.Message}");
+            } 
         }
     }
 }

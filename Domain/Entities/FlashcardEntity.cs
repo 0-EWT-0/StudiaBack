@@ -32,6 +32,6 @@ namespace Domain.Entities
 
         [ForeignKey("id_type_id")]
 
-        public TypeEntity Type { get; set; }
+        public TypeEntity Type { get; set; } = null!;
     }
 }

@@ -4,8 +4,6 @@ namespace Application.DTOS
 {
     public class UpdateResumeDTO
     {
-        [Required]
-        public int ResumeId { get; set; }
 
         [Required]
         public string content { get; set; } = string.Empty;
@@ -14,7 +12,5 @@ namespace Application.DTOS
 
         public string image_url { get; set; } = string.Empty;
 
-        [Required]
-        public int typeId { get; set; }
     }
 }

@@ -9,8 +9,6 @@ namespace Application.DTOS
 {
     public class UpdateFlashcardDTO
     {
-        [Required]
-        public int FlashcardId { get; set; }
 
         [Required]
         public string content { get; set; } = string.Empty;
@@ -19,7 +17,5 @@ namespace Application.DTOS
 
         public string image_url { get; set; } = string.Empty;
 
-        [Required]
-        public int typeId { get; set; }
     }
 }

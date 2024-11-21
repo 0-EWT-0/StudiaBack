@@ -54,9 +54,9 @@ namespace Infrastructure.Repo
             };
         }
 
-        public async Task<ResumeResponse> UpdateResumeAsync(UpdateResumeDTO resumeDTO, int userId)
+        public async Task<ResumeResponse> UpdateResumeAsync(UpdateResumeDTO resumeDTO, int userId, int resumeId)
         {
-            var resume = await _dbContext.Resumes.FirstOrDefaultAsync(r => r.id_resume == resumeDTO.ResumeId && r.id_user_id == userId);
+            var resume = await _dbContext.Resumes.FirstOrDefaultAsync(r => r.id_resume == resumeId && r.id_user_id == userId);
 
             if (resume == null)
             {
@@ -66,7 +66,6 @@ namespace Infrastructure.Repo
             resume.content = resumeDTO.content;
             resume.is_public = resumeDTO.isPublic;
             resume.image_url = resumeDTO.image_url;
-            resume.id_type_id = resumeDTO.typeId;
 
             await _dbContext.SaveChangesAsync();
 
@@ -108,10 +107,5 @@ namespace Infrastructure.Repo
             };
         }
 
-        public async Task<bool> ResumeExistsAsync(string content, int userId)
-        {
-            return await _dbContext.Resumes
-                .AnyAsync(r => r.content == content && r.id_user_id == userId);
-        }
     }
 }

@@ -57,9 +57,9 @@ namespace Infrastructure.Repo
             };
         }
 
-        public async Task<FlashcardResponse> UpdateFlashcardAsync(UpdateFlashcardDTO flashcardDTO, int userId)
+        public async Task<FlashcardResponse> UpdateFlashcardAsync(UpdateFlashcardDTO flashcardDTO, int userId, int flashcardId)
         {
-            var flashcard = await _dbContext.Flashcards.FirstOrDefaultAsync(r => r.id_flashcard == flashcardDTO.FlashcardId && r.id_user_id == userId);
+            var flashcard = await _dbContext.Flashcards.FirstOrDefaultAsync(r => r.id_flashcard == flashcardId && r.id_user_id == userId);
 
             if (flashcard == null)
             {
@@ -69,7 +69,6 @@ namespace Infrastructure.Repo
             flashcard.content = flashcardDTO.content;
             flashcard.is_public = flashcardDTO.isPublic;
             flashcard.image_url = flashcardDTO.image_url;
-            flashcard.id_type_id = flashcardDTO.typeId;
 
             await _dbContext.SaveChangesAsync();
 
@@ -114,6 +113,11 @@ namespace Infrastructure.Repo
         {
             return await _dbContext.Flashcards
                 .AnyAsync(r => r.content == content && r.id_user_id == userId);
+        }
+
+        public async Task<List<FlashcardEntity>> GetUserFlashcardsAsync(int userId) 
+        { 
+            return await _dbContext.Flashcards.Where(r => r.id_user_id == userId).ToListAsync(); 
         }
     }
 }
