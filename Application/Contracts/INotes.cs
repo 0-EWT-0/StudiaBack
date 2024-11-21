@@ -11,5 +11,7 @@ namespace Application.Contracts
         Task<NoteResponse> UpdateNoteAsync(UpdateNoteDTO noteDTO);
 
         Task<NoteResponse> DeleteNoteAsync(int noteId);
+
+        Task<bool> NoteNameExistsAsync(string NoteName);
     }
 }

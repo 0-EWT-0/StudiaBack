@@ -19,8 +19,20 @@ namespace Infrastructure.Repo
 
         public async Task<NoteResponse> CreateNoteAsync(CreateNoteDTO noteDTO, int folderId)
         {
+            if (string.IsNullOrWhiteSpace(noteDTO.Name))
+            {
+                throw new InvalidOperationException("Note name cannot be null or empty.");
+            }
+
+            if (await NoteNameExistsAsync(noteDTO.Name))
+            {
+                throw new InvalidOperationException("A Note with the same name already exists for this folder.");
+            }
+
+
             var note = new NoteEntity
             {
+                name = noteDTO.Name,
                 content = noteDTO.content,
                 is_public = noteDTO.isPublic,
                 id_folder_id = folderId,
@@ -30,10 +42,13 @@ namespace Infrastructure.Repo
             _dbContext.Notes.Add(note);
             await _dbContext.SaveChangesAsync();
 
+            var response = "Note created succesfully";
             return new NoteResponse()
             {
+                Response =  response,
                 NoteId = note.id_note,
                 FolderId = note.id_folder_id,
+                Name = note.name,
                 Content = note.content,
                 IsPublic = note.is_public,
                 CreatedAt = note.created_at
@@ -48,17 +63,20 @@ namespace Infrastructure.Repo
             {
                 throw new InvalidOperationException("Note not found");
             }
-
+            note.name = noteDTO.Name;
             note.content = noteDTO.newContent;
-
             note.is_public = noteDTO.isPublic;
 
             await _dbContext.SaveChangesAsync();
 
+            var response = "Note updated succesfully";
+
             return new NoteResponse
             {
+                Response = response,
                 NoteId = note.id_note,
                 FolderId = note.id_folder_id,
+                Name = note.name,
                 Content = note.content,
                 IsPublic = note.is_public,
                 CreatedAt = note.created_at
@@ -69,7 +87,7 @@ namespace Infrastructure.Repo
         {
             var note = await _dbContext.Notes.FirstOrDefaultAsync(n => n.id_note == noteId);
 
-            var response = "folder deleted succsesfully";
+            var response = "Note deleted succsesfully";
 
             if (note == null)
             {
@@ -84,11 +102,18 @@ namespace Infrastructure.Repo
             {
                 Response = response,
                 NoteId = noteId,
+                Name = note.name,
                 Content = note.content,
                 IsPublic = note.is_public,
                 CreatedAt = note.created_at
             };
 
+        }
+
+        public async Task<bool> NoteNameExistsAsync(string NoteName)
+        {
+            return await _dbContext.Notes
+              .AnyAsync(n => n.name == NoteName);
         }
     }
 }

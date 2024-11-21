@@ -30,6 +30,44 @@ namespace Infrastructure.Repo
                 throw new InvalidOperationException("You have already rated this resource.");
             }
 
+            if (ratingDTO.FlashcardId.HasValue)
+            {
+                var flashcard = await _dbContext.Flashcards.FirstOrDefaultAsync(f => f.id_flashcard == ratingDTO.FlashcardId.Value);
+                if (flashcard == null || !flashcard.is_public)
+                {
+                    throw new InvalidOperationException("The flashcard is either not found or not public.");
+                }
+            }
+            else if (ratingDTO.ExamId.HasValue)
+            {
+                var exam = await _dbContext.Exams.FirstOrDefaultAsync(e => e.id_exam == ratingDTO.ExamId.Value);
+                if (exam == null || !exam.is_public)
+                {
+                    throw new InvalidOperationException("The exam is either not found or not public.");
+                }
+            }
+            else if (ratingDTO.ResumeId.HasValue)
+            {
+                var resume = await _dbContext.Resumes.FirstOrDefaultAsync(r => r.id_resume == ratingDTO.ResumeId.Value);
+                if (resume == null || !resume.is_public)
+                {
+                    throw new InvalidOperationException("The resume is either not found or not public.");
+                }
+            }
+            else if (ratingDTO.NoteId.HasValue)
+            {
+                var note = await _dbContext.Notes.FirstOrDefaultAsync(n => n.id_note == ratingDTO.NoteId.Value);
+                if (note == null || !note.is_public)
+                {
+                    throw new InvalidOperationException("The note is either not found or not public.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("A rating must be associated with exactly one resource.");
+            }
+
+
             if ((new[] { ratingDTO.FlashcardId, ratingDTO.ExamId, ratingDTO.ResumeId, ratingDTO.NoteId }).Count(id => id != null) != 1)
             {
                 throw new InvalidOperationException("A rating must be associated with exactly one resource.");

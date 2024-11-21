@@ -6,6 +6,11 @@ namespace Application.DTOS
 {
     public class CreateFlashcardDTO
     {
+
+        [Required]
+
+        public string Name { get; set; } = string.Empty;
+
         public string content { get; set; } = string.Empty;
 
         public bool isPublic { get; set; } = false;

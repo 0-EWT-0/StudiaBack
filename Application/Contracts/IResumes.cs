@@ -15,5 +15,7 @@ namespace Application.Contracts
         Task<ResumeResponse> UpdateResumeAsync(UpdateResumeDTO resumeDTO, int userId, int resumeId);
 
         Task<ResumeResponse> DeleteResumeAsync(int resumeId, int userId);
+
+        Task<bool> ResumeNameExistsAsync(string resumeName, int userId);
     }
 }

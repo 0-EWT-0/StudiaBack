@@ -9,6 +9,8 @@ namespace Application.DTOS
         [Required]
         public int ExamId {  get; set; }
 
+        public string Name { get; set; } = string.Empty;
+
         public string Content { get; set; } = string.Empty;
 
         public string ImageUrl { get; set; } = string.Empty;

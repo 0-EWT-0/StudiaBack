@@ -16,6 +16,10 @@ namespace Domain.Entities
         public DateTime created_at { get; set; }
 
         [Required]
+
+        public string name { get; set; } = string.Empty;
+
+        [Required]
         public string content { get; set; } = string.Empty;
 
         public string image_url { get; set; } = string.Empty;

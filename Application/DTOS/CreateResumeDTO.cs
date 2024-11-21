@@ -5,6 +5,10 @@ namespace Application.DTOS
     public class CreateResumeDTO
     {
         [Required]
+
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
         public string content { get; set; } = string.Empty;
 
         public bool isPublic { get; set; } = false;

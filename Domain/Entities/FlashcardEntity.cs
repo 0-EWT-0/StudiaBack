@@ -27,6 +27,9 @@ namespace Domain.Entities
 
         public bool is_public { get; set; } = false;
 
+        [Required]
+        public string name { get; set; } = string.Empty;
+
         [ForeignKey("id_user_id")]
         public UserEntity User { get; set; } = null!;
 

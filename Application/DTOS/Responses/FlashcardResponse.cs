@@ -11,6 +11,8 @@ namespace Application.DTOS.Responses
         public string Response { get; set; } = string.Empty;
         public int UserId { get; set; }
         public int FlashcardId { get; set; }
+
+        public string Name { get; set; } = string.Empty;
         public required string Content { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public bool IsPublic { get; set; }

@@ -11,7 +11,9 @@ namespace Application.Contracts
 
         Task<ExamResponse> UpdateExamAsync(UpdateExamDTO examDTO, int userId);
 
-        Task<ExamResponse> DeleteExamAsync(int examId, int userId); 
+        Task<ExamResponse> DeleteExamAsync(int examId, int userId);
+
+        Task<bool> ExamNameExistsAsync(string examName, int userId);
 
     }
 }

@@ -20,9 +20,24 @@ namespace Infrastructure.Repo
 
         public async Task<ExamResponse> CreateExamAsync(CreateExamDTO examDTO, int userId)
         {
+            if (string.IsNullOrWhiteSpace(examDTO.Name))
+            {
+                throw new InvalidOperationException("Exam name cannot be null or empty.");
+            }
+
+            if (examDTO.TypeId <= 0)
+            {
+                throw new InvalidOperationException("Exam typeId must be a positive value.");
+            }
+
+            if (await ExamNameExistsAsync(examDTO.Name, userId))
+            {
+                throw new InvalidOperationException("An exam with the same name already exists for this user.");
+            }
             var exam = new ExamEntity
             {
                 id_user_id = userId,
+                name = examDTO.Name,
                 content = examDTO.Content,
                 image_url = examDTO.Image_url,
                 difficulty = examDTO.Difficulty,
@@ -52,6 +67,7 @@ namespace Infrastructure.Repo
                 ExamId = exam.id_exam,
                 UserId = exam.id_user_id,
                 TypeId = exam.id_type_id,
+                Name = exam.name,
                 Content = exam.content,
                 ImageUrl = exam.image_url,
                 Difficulty = exam.difficulty,
@@ -67,6 +83,9 @@ namespace Infrastructure.Repo
             {
                 throw new InvalidOperationException("Exam not found or user is not authorized.");
             }
+
+            var relatedMaterials = _dbContext.Materials.Where(m => m.id_exam_id == examId);
+            _dbContext.Materials.RemoveRange(relatedMaterials);
 
             _dbContext.Exams.Remove(exam);
             await _dbContext.SaveChangesAsync();
@@ -95,6 +114,7 @@ namespace Infrastructure.Repo
                 throw new InvalidOperationException("Exam not found or user is not authorized.");
             }
 
+            exam.name = examDTO.Name;
             exam.content = examDTO.Content;
             exam.image_url = examDTO.ImageUrl;
             exam.difficulty = examDTO.Difficulty;
@@ -110,10 +130,17 @@ namespace Infrastructure.Repo
                 ExamId = exam.id_exam,
                 UserId = exam.id_user_id,
                 TypeId = exam.id_type_id,
+                Name = exam.name,
                 Content = exam.content,
                 ImageUrl = exam.image_url,
                 Difficulty = exam.difficulty,
             };
+        }
+
+        public async Task<bool> ExamNameExistsAsync(string examName, int userId)
+        {
+            return await _dbContext.Exams
+                .AnyAsync(e => e.name == examName && e.id_user_id == userId);
         }
     }
 }

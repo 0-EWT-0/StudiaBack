@@ -17,5 +17,7 @@ namespace Application.Contracts
 
         Task<FlashcardResponse> DeleteFlashcardAsync(int flashcardId, int userId);
 
+        Task<bool> FlashcardNameExistsAsync(string flashcardName, int userId);
+
     }
 }
