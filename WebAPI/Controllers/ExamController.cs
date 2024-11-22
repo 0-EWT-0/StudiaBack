@@ -41,6 +41,7 @@ namespace WebAPI.Controllers
             {
                 var exams = await _studiaDBContext.Exams
                     .Where(n => n.id_user_id == int.Parse(userId))
+                    .Include(e => e.Type)
                     .ToListAsync();
 
                 return Ok(exams);

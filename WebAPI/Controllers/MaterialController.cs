@@ -40,9 +40,8 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al obtener los materiales: {ex.Message}");
+                return StatusCode(500, $"Error retrieving materials: {ex.Message}");
             }
         }
-
     }
 }

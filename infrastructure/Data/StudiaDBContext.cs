@@ -56,10 +56,29 @@ namespace Infrastructure.Data
 
             modelBuilder.Entity<MaterialEntity>().ToTable("material").HasKey(m => m.id_material);
 
-            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.User).WithMany().HasForeignKey(m => m.id_user_id);
-            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Exam).WithMany().HasForeignKey(m => m.id_exam_id).IsRequired(false);
-            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Resume).WithMany().HasForeignKey(m => m.id_resume_id).IsRequired(false);
-            modelBuilder.Entity<MaterialEntity>().HasOne(m => m.Flashcard).WithMany().HasForeignKey(m => m.id_flashcard_id).IsRequired(false);
+            modelBuilder.Entity<MaterialEntity>()
+                .HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => m.id_user_id);
+
+            modelBuilder.Entity<MaterialEntity>()
+                .HasOne(m => m.Exam)
+                .WithMany()
+                .HasForeignKey(m => m.id_exam_id)
+                .IsRequired(false);
+
+            modelBuilder.Entity<MaterialEntity>()
+                .HasOne(m => m.Flashcard)
+                .WithMany()
+                .HasForeignKey(m => m.id_flashcard_id)
+                .IsRequired(false);
+
+            modelBuilder.Entity<MaterialEntity>()
+                .HasOne(m => m.Resume)
+                .WithMany()
+                .HasForeignKey(m => m.id_resume_id)
+                .IsRequired(false);
+
 
             modelBuilder.Entity<ExamEntity>().ToTable("exams").HasKey(e => e.id_exam);
 

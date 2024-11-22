@@ -71,6 +71,8 @@ namespace Infrastructure.Repo
                 Content = exam.content,
                 ImageUrl = exam.image_url,
                 Difficulty = exam.difficulty,
+                IsPublic = exam.is_public,
+                CreatedAt = exam.created_at,
             };
         }
 
@@ -101,6 +103,8 @@ namespace Infrastructure.Repo
                 Content = exam.content,
                 ImageUrl = exam.image_url,
                 Difficulty = exam.difficulty,
+                IsPublic = exam.is_public,
+                CreatedAt = exam.created_at,
             };
         }
 
@@ -134,6 +138,8 @@ namespace Infrastructure.Repo
                 Content = exam.content,
                 ImageUrl = exam.image_url,
                 Difficulty = exam.difficulty,
+                IsPublic = exam.is_public,
+                CreatedAt = exam.created_at,
             };
         }
 

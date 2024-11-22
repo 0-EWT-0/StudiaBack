@@ -20,6 +20,27 @@ namespace WebAPI.Controllers
             _reminderService = reminderService;
         }
 
+        [HttpGet("get")]
+        public async Task<IActionResult> GetReminders()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("User not authorized.");
+            }
+
+            try
+            {
+                var reminders = await _reminderService.GetReminderAsync(int.Parse(userId));
+                return Ok(reminders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving reminders: {ex.Message}");
+            }
+        }
+
+
         [HttpPost("create")]
         public async Task<ActionResult<ReminderResponse>> CreateReminder([FromBody] CreateReminderDTO reminderDTO)
         {

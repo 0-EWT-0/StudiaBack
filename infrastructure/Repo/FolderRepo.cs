@@ -104,5 +104,30 @@ namespace Infrastructure.Repo
                 CreatedAt = folder.created_at
             };
         }
+
+        public async Task<List<FolderResponse>> GetFoldersAsync(int userId)
+        {
+            return await _dbContext.Folders
+                .Where(f => f.id_user_id == userId)
+                .Include(f => f.Notes)
+                .Select(f => new FolderResponse
+                {
+                    FolderId = f.id_folder,
+                    UserId = f.id_user_id,
+                    Name = f.name,
+                    IsPublic = f.is_public,
+                    CreatedAt = f.created_at,
+                    Notes = f.Notes.Select(note => new NoteResponse
+                    {
+                        NoteId = note.id_note,
+                        Name = note.name,
+                        Content = note.content,
+                        IsPublic = note.is_public,
+                        CreatedAt = note.created_at
+                    }).ToList()
+                })
+                .ToListAsync();
+        }
+
     }
 }

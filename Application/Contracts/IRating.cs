@@ -10,5 +10,7 @@ namespace Application.Contracts
         Task<RatingResponse> CreateRatingAsync(CreateRatingDTO ratingDTO, int userId);
 
         Task<List<RatingResponse>> GetRatingsByResourceAsync(int? flashcardId, int? examId, int? resumeId, int? noteId);
+
+        Task<List<RatingResponse>> GetRatingsAsync(int userId);
     }
 }

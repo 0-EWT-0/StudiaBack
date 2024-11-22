@@ -144,5 +144,58 @@ namespace Infrastructure.Repo
                 .ToListAsync();
         }
 
+        public async Task<List<RatingResponse>> GetRatingsAsync(int userId)
+        {
+            return await _dbContext.Ratings
+                .Where(r => r.id_user_id == userId)
+                .Include(r => r.Exam)
+                .Include(r => r.Flashcard)
+                .Include(r => r.Resume)
+                .Include(r => r.Note)
+                .Select(r => new RatingResponse
+                {
+                    RatingId = r.id_rating,
+                    UserId = r.id_user_id,
+                    Rating = r.rating,
+                    CreatedAt = r.created_at,
+                    Exam = r.Exam != null ? new ExamResponse
+                    {
+                        ExamId = r.Exam.id_exam,
+                        Name = r.Exam.name,
+                        Content = r.Exam.content,
+                        ImageUrl = r.Exam.image_url,
+                        Difficulty = r.Exam.difficulty,
+                        IsPublic = r.Exam.is_public,
+                        CreatedAt = r.Exam.created_at
+                    } : null,
+                    Flashcard = r.Flashcard != null ? new FlashcardResponse
+                    {
+                        FlashcardId = r.Flashcard.id_flashcard,
+                        Name = r.Flashcard.name,
+                        Content = r.Flashcard.content,
+                        ImageUrl = r.Flashcard.image_url,
+                        IsPublic = r.Flashcard.is_public,
+                        CreatedAt = r.Flashcard.created_at
+                    } : null,
+                    Resume = r.Resume != null ? new ResumeResponse
+                    {
+                        ResumeId = r.Resume.id_resume,
+                        Content = r.Resume.content,
+                        IsPublic = r.Resume.is_public,
+                        CreatedAt = r.Resume.created_at
+                    } : null,
+                    Note = r.Note != null ? new NoteResponse
+                    {
+                        NoteId = r.Note.id_note,
+                        Name = r.Note.name,
+                        Content = r.Note.content,
+                        IsPublic = r.Note.is_public,
+                        CreatedAt = r.Note.created_at
+                    } : null,
+                })
+                .ToListAsync();
+        }
+
+
     }
 }

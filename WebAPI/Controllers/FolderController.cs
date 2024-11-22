@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult> getUserFolders()
+        public async Task<ActionResult> GetUserFolders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -39,21 +39,17 @@ namespace WebAPI.Controllers
                 return Unauthorized("User unauthorized.");
             }
 
-            List<FolderEntity> folders;
-
             try
             {
-                folders = await _studiaDBContext.Folders
-                    .Where(f => f.id_user_id == int.Parse(userId))
-                    .ToListAsync();
+                var folders = await folder.GetFoldersAsync(int.Parse(userId));
+                return Ok(folders);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error to get the folders: {ex.Message}");
             }
-
-            return Ok(folders);
         }
+
 
         [HttpPost("create")]
         public async Task<ActionResult<FolderResponse>> CreateFolder([FromBody] CreateFolderDTO folderDTO)

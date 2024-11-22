@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("get")]
+        [HttpGet("getByMaterial")]
         public async Task<ActionResult<List<RatingResponse>>> GetRatings([FromQuery] int? flashcardId, [FromQuery] int? examId, [FromQuery] int? resumeId, [FromQuery] int? noteId)
         {
             try
@@ -66,5 +66,33 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error retrieving ratings: {ex.Message}");
             }
         }
+        [HttpGet("get")]
+        public async Task<ActionResult> GetRatings()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var parsedUserId))
+            {
+                return Unauthorized("User not authorized.");
+            }
+
+            try
+            {
+                var ratings = await _ratingService.GetRatingsAsync(parsedUserId);
+
+                if (ratings == null || !ratings.Any())
+                {
+                    return NotFound("No ratings found for the user.");
+                }
+
+                return Ok(ratings);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving ratings: {ex.Message}");
+            }
+        }
+
+
     }
 }

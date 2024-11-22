@@ -13,5 +13,6 @@ namespace Application.Contracts
         Task<ReminderResponse> CreateReminderAsync(CreateReminderDTO reminderDTO, int userId); 
         Task<ReminderResponse> UpdateReminderAsync(UpdateReminderDTO reminderDTO, int userId); 
         Task<ReminderResponse> DeleteReminderAsync(int reminderId, int userId); 
+        Task<List<ReminderResponse>> GetReminderAsync(int userId );
     }
 }

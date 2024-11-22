@@ -95,5 +95,47 @@ namespace Infrastructure.Repo
             };
         }
 
+        public async Task<List<ReminderResponse>> GetReminderAsync(int userId)
+        {
+            return await _dbContext.Reminders
+       .Where(r => r.id_user_id == userId)
+       .Include(r => r.Exam)
+       .Include(r => r.Flashcard)
+       .Include(r => r.Resume)
+       .Select(r => new ReminderResponse
+       {
+           ReminderId = r.id_reminder,
+           UserId = r.id_user_id,
+           Exam = r.Exam != null ? new ExamResponse
+           {
+               ExamId = r.Exam.id_exam,
+               Name = r.Exam.name,
+               Content = r.Exam.content,
+               ImageUrl = r.Exam.image_url,
+               Difficulty = r.Exam.difficulty,
+               IsPublic = r.Exam.is_public,
+               CreatedAt = r.Exam.created_at
+           } : null,
+           Flashcard = r.Flashcard != null ? new FlashcardResponse
+           {
+               FlashcardId = r.Flashcard.id_flashcard,
+               Name = r.Flashcard.name,
+               Content = r.Flashcard.content,
+               ImageUrl = r.Flashcard.image_url,
+               IsPublic = r.Flashcard.is_public,
+               CreatedAt = r.Flashcard.created_at
+           } : null,
+           Resume = r.Resume != null ? new ResumeResponse
+           {
+               ResumeId = r.Resume.id_resume,
+               Content = r.Resume.content,
+               IsPublic = r.Resume.is_public,
+               CreatedAt = r.Resume.created_at
+           } : null,
+           ReminderDate = r.reminder_date,
+           Response = "Reminder retrieved successfully"
+       })
+       .ToListAsync();
+        }
     }
 }

@@ -23,13 +23,38 @@ namespace Infrastructure.Repo
                 .Include(m => m.Resume)
                 .Select(m => new MaterialResponse
                 {
-                    materialId = m.id_material,
-                    id_user_id = m.id_user_id,
-                    id_exam_id = m.id_exam_id ?? 0,
-                    id_flashcard_id = m.id_flashcard_id ?? 0,
-                    id_resume_id = m.id_resume_id ?? 0,
+                    MaterialId = m.id_material,
+                    UserId = m.id_user_id,
+                    Exam = m.Exam != null ? new ExamResponse
+                    {
+                        ExamId = m.Exam.id_exam,
+                        Name = m.Exam.name,
+                        Content = m.Exam.content,
+                        ImageUrl = m.Exam.image_url,
+                        Difficulty = m.Exam.difficulty,
+                        IsPublic = m.Exam.is_public,
+                        CreatedAt = m.Exam.created_at
+                    } : null,
+                    Flashcard = m.Flashcard != null ? new FlashcardResponse
+                    {
+                        FlashcardId = m.Flashcard.id_flashcard,
+                        Name = m.Flashcard.name,
+                        Content = m.Flashcard.content,
+                        ImageUrl = m.Flashcard.image_url,
+                        IsPublic = m.Flashcard.is_public,
+                        CreatedAt = m.Flashcard.created_at
+                    } : null,
+                    Resume = m.Resume != null ? new ResumeResponse
+                    {
+                        ResumeId = m.Resume.id_resume,
+                        Content = m.Resume.content,
+                        IsPublic = m.Resume.is_public,
+                        CreatedAt = m.Resume.created_at
+                    } : null,
                 })
                 .ToListAsync();
         }
+
+
     }
 }
