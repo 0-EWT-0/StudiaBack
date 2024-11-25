@@ -17,6 +17,8 @@ namespace Infrastructure.Repo
         {
             _dbContext = dbContext;
         }
+
+       
         public async Task<bool> FolderExistsAsync(string folderName, int userId)
         {
             return await _dbContext.Folders
@@ -107,9 +109,10 @@ namespace Infrastructure.Repo
 
         public async Task<List<FolderResponse>> GetFoldersAsync(int userId)
         {
+            // Filtrar folders que pertenezcan al usuario y mapear a FolderResponse
             return await _dbContext.Folders
                 .Where(f => f.id_user_id == userId)
-                .Include(f => f.Notes)
+                .Include(f => f.Notes) // Incluir las notas asociadas
                 .Select(f => new FolderResponse
                 {
                     FolderId = f.id_folder,
@@ -128,6 +131,7 @@ namespace Infrastructure.Repo
                 })
                 .ToListAsync();
         }
+
 
     }
 }

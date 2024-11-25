@@ -41,14 +41,24 @@ namespace WebAPI.Controllers
 
             try
             {
+                // Llamar al repositorio para obtener los folders del usuario
                 var folders = await folder.GetFoldersAsync(int.Parse(userId));
+
+                // Si no hay folders, devolver un mensaje informativo
+                if (folders == null || !folders.Any())
+                {
+                    return NotFound("No folders found for the user.");
+                }
+
+                // Retornar los folders
                 return Ok(folders);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error to get the folders: {ex.Message}");
+                return StatusCode(500, $"Error retrieving folders: {ex.Message}");
             }
         }
+
 
 
         [HttpPost("create")]

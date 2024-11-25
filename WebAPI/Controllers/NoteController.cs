@@ -42,6 +42,35 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        [HttpGet("get-all")]
+        public async Task<ActionResult> GetAllUserNotes()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized("User unauthorized.");
+            }
+
+            try
+            {
+                var notes = await _studiaDBContext.Notes
+                    .Where(n => n.id_user_id == int.Parse(userId)) // Asegúrate de que las notas tengan una referencia al usuario
+                    .ToListAsync();
+
+                return Ok(notes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving notes: {ex.Message}");
+            }
+        }
+
+
+
+
+
         [HttpPost("create")]
         public async Task<ActionResult<NoteResponse>> CreateNote(int folderId, [FromBody] CreateNoteDTO noteDTO)
         {
