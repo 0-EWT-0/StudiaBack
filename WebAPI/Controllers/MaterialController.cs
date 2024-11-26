@@ -1,8 +1,10 @@
 ﻿
 using Application.Contracts;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace WebAPI.Controllers
@@ -41,6 +43,26 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error retrieving materials: {ex.Message}");
+            }
+        }
+
+        [HttpGet("getResources")]
+        public async Task<IActionResult> GetAllResources()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("User not authorized.");
+            }
+
+            try
+            {
+               var resources = await material.GetAllResources();
+                return Ok(resources);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener los recursos{ex.Message}");
             }
         }
     }
