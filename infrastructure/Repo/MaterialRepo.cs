@@ -47,6 +47,7 @@ namespace Infrastructure.Repo
                     {
                         ResumeId = m.Resume.id_resume,
                         Content = m.Resume.content,
+                        Name = m.Resume.name,
                         IsPublic = m.Resume.is_public,
                         CreatedAt = m.Resume.created_at
                     } : null,
