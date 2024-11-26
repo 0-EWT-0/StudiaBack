@@ -10,6 +10,9 @@ namespace Application.Contracts
 
         Task<NoteResponse> UpdateNoteAsync(UpdateNoteDTO noteDTO);
 
+        Task<bool> UpdateNotesFolderAsync(UpdateNotesFolderDTO updateNotesFolderDto);
+
+
         Task<NoteResponse> DeleteNoteAsync(int noteId);
 
         Task<bool> NoteNameExistsAsync(string NoteName);

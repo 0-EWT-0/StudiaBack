@@ -43,31 +43,6 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet("get-all")]
-        public async Task<ActionResult> GetAllUserNotes()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId == null)
-            {
-                return Unauthorized("User unauthorized.");
-            }
-
-            try
-            {
-                var notes = await _studiaDBContext.Notes
-                    .Where(n => n.id_user_id == int.Parse(userId)) // Asegúrate de que las notas tengan una referencia al usuario
-                    .ToListAsync();
-
-                return Ok(notes);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error retrieving notes: {ex.Message}");
-            }
-        }
-
-
 
 
 
@@ -108,6 +83,28 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error updating note content: {ex.Message}");
             }
         }
+
+
+        // Nuevo método para actualizar las notas en una carpeta
+        [HttpPut("update-notes-folder")]
+        public async Task<IActionResult> UpdateNotesFolder([FromBody] UpdateNotesFolderDTO updateNotesFolderDto)
+        {
+            try
+            {
+                var result = await note.UpdateNotesFolderAsync(updateNotesFolderDto);
+                return Ok(new { message = "Notas actualizadas correctamente." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al actualizar las notas: {ex.Message}");
+            }
+        }
+
+
 
         [HttpDelete("delete/{noteId}")]
 

@@ -10,6 +10,7 @@ namespace Application.DTOS
     public class UpdateNoteDTO
     {
         [Required]
+        public int folderId { get; set; }  // Añadido para actualizar el folderId
         public int noteId {  get; set; }
 
         public string Name { get; set; } = string.Empty;

@@ -83,6 +83,29 @@ namespace Infrastructure.Repo
             };
         }
 
+        // Método que actualiza las notas en la carpeta
+        public async Task<bool> UpdateNotesFolderAsync(UpdateNotesFolderDTO updateNotesFolderDto)
+        {
+            // Buscar las notas con los Ids proporcionados
+            var notes = await _dbContext.Notes
+                .Where(n => updateNotesFolderDto.NoteIds.Contains(n.id_note))
+                .ToListAsync();
+
+            if (notes.Count == 0)
+            {
+                throw new InvalidOperationException("No notes found to update.");
+            }
+
+            // Actualizar la carpeta de las notas
+            foreach (var note in notes)
+            {
+                note.id_folder_id = updateNotesFolderDto.FolderId;
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<NoteResponse> DeleteNoteAsync(int noteId)
         {
             var note = await _dbContext.Notes.FirstOrDefaultAsync(n => n.id_note == noteId);
