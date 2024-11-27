@@ -1,12 +1,12 @@
 ﻿using Application.Contracts;
 using Application.DTOS;
 using Application.DTOS.Responses;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("get")]
-        
+
         public async Task<IActionResult> ListResponses()
         {
             List<ResponseEntity> responses;

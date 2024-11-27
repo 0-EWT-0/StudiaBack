@@ -1,14 +1,11 @@
 ﻿// WebAPI/Controllers/FolderController.cs
+using Application.Contracts;
+using Application.DTOS;
+using Application.DTOS.Responses;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Application.Contracts;
-using Application.DTOS;
-using Infrastructure.Repo;
-using Domain.Entities;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Application.DTOS.Responses;
 
 namespace WebAPI.Controllers
 {
@@ -106,6 +103,32 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error deleting folder and notes: {ex.Message}");
             }
         }
+
+        [HttpDelete("delete/multiple")]
+        public async Task<ActionResult<DeleteMultipleFoldersResponse>> DeleteMultipleFolders([FromBody] List<int> folderIds)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized("Usuario no autorizado.");
+            }
+
+            try
+            {
+                var response = await folder.DeleteMultipleFoldersAsync(folderIds);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al eliminar las carpetas: {ex.Message}");
+            }
+        }
+
 
         [HttpPut("update/{folderId}")]
         public async Task<ActionResult<FolderResponse>> UpdateFolderName(int folderId, [FromBody] UpdateFolderDTO updateFolderDTO)

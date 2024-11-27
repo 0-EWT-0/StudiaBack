@@ -1,7 +1,6 @@
 ﻿using Application.Contracts;
 using Application.DTOS;
 using Application.DTOS.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -22,7 +21,7 @@ namespace WebAPI.Controllers
             var result = await user.LoginUserAsync(loginDTO);
 
             return Ok(result);
-   
+
         }
 
         [HttpPost("register")]

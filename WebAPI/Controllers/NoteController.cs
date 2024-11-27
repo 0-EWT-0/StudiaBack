@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Application.Contracts;
+﻿using Application.Contracts;
 using Application.DTOS;
-using Domain.Entities;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Application.DTOS.Responses;
-using System.Security.Cryptography;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -66,7 +64,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                
+
                 //var updateNoteDto = new UpdateNoteDTO { noteId = noteId, newContent = newContent, isPublic = isPublic};
 
                 var response = await note.UpdateNoteAsync(updateNoteDto);
@@ -125,5 +123,32 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error deleting folder and notes: {ex.Message}");
             }
         }
+
+
+        [HttpDelete("delete/multiple")]
+        public async Task<ActionResult<DeleteMultipleNotesResponse>> DeleteMultipleNotes([FromBody] List<int> noteIds)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized("Usuario no autorizado.");
+            }
+
+            try
+            {
+                var response = await note.DeleteMultipleNotesAsync(noteIds);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al eliminar las notas: {ex.Message}");
+            }
+        }
+
     }
 }

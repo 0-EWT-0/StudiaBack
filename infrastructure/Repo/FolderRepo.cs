@@ -54,19 +54,27 @@ namespace Infrastructure.Repo
                 CreatedAt = folder.created_at
             };
         }
+
         public async Task<FolderResponse> DeleteFolderAsync(int folderId, int userId)
         {
-            var folder = await _dbContext.Folders.Include(f => f.Notes).FirstOrDefaultAsync(f => f.id_folder == folderId && f.id_user_id == userId);
+            // Verificar si el folder existe y pertenece al usuario
+            var folder = await _dbContext.Folders
+                .Include(f => f.Notes)
+                .FirstOrDefaultAsync(f => f.id_folder == folderId && f.id_user_id == userId);
 
             if (folder == null)
             {
-                throw new InvalidOperationException("folder not found");
+                throw new InvalidOperationException("Folder not found or does not belong to the user.");
             }
 
-            _dbContext.Notes.RemoveRange(folder.Notes);
+            // Eliminar las notas asociadas
+            if (folder.Notes.Any())
+            {
+                _dbContext.Notes.RemoveRange(folder.Notes);
+            }
 
+            // Eliminar el folder
             _dbContext.Folders.Remove(folder);
-
             await _dbContext.SaveChangesAsync();
 
             return new FolderResponse
@@ -75,9 +83,45 @@ namespace Infrastructure.Repo
                 FolderId = folder.id_folder,
                 Name = folder.name,
                 IsPublic = folder.is_public,
-                CreatedAt = folder.created_at
+                CreatedAt = folder.created_at,
+                Response = "Folder deleted successfully."
             };
         }
+
+
+        public async Task<DeleteMultipleFoldersResponse> DeleteMultipleFoldersAsync(List<int> folderIds)
+        {
+            // Verificar si los folders existen y pertenecen al usuario
+            var folders = await _dbContext.Folders
+                .Where(f => folderIds.Contains(f.id_folder))
+                .Include(f => f.Notes)
+                .ToListAsync();
+
+            if (folders.Count == 0)
+            {
+                throw new InvalidOperationException("No folders found to delete.");
+            }
+
+            // Eliminar las notas asociadas
+            foreach (var folder in folders)
+            {
+                if (folder.Notes.Any())
+                {
+                    _dbContext.Notes.RemoveRange(folder.Notes);
+                }
+            }
+
+            // Eliminar los folders
+            _dbContext.Folders.RemoveRange(folders);
+            await _dbContext.SaveChangesAsync();
+
+            return new DeleteMultipleFoldersResponse
+            {
+                FolderIds = folders.Select(f => f.id_folder).ToList(),
+                Response = "Folders deleted successfully."
+            };
+        }
+
 
         public async Task<FolderResponse> UpdateFolderAsync(UpdateFolderDTO folderDTO, int userId)
         {

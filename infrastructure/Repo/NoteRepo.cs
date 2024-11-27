@@ -133,6 +133,24 @@ namespace Infrastructure.Repo
 
         }
 
+        public async Task<DeleteMultipleNotesResponse> DeleteMultipleNotesAsync(List<int> noteIds) 
+        { 
+            var notes = await _dbContext.Notes
+                .Where(n => noteIds.Contains(n.id_note))
+                .ToListAsync(); 
+            if (notes.Count == 0) 
+            { 
+                throw new InvalidOperationException("No notes found to delete."); 
+            } 
+            _dbContext.Notes.RemoveRange(notes); 
+            await _dbContext.SaveChangesAsync(); 
+            return new DeleteMultipleNotesResponse 
+            { 
+                NoteIds = notes.Select(n => n.id_note).ToList(), 
+                Response = "Notes deleted successfully" 
+            }; 
+        }
+
         public async Task<bool> NoteNameExistsAsync(string NoteName)
         {
             return await _dbContext.Notes

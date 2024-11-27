@@ -15,6 +15,8 @@ namespace Application.Contracts
 
         Task<NoteResponse> DeleteNoteAsync(int noteId);
 
+        Task<DeleteMultipleNotesResponse> DeleteMultipleNotesAsync(List<int> noteIds); // Nueva declaración
+
         Task<bool> NoteNameExistsAsync(string NoteName);
     }
 }

@@ -1,12 +1,11 @@
 ﻿using Application.Contracts;
-using Application.DTOS.Responses;
 using Application.DTOS;
-using Domain.Entities;
+using Application.DTOS.Responses;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -94,27 +93,28 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("update/{flashcardId}")] 
-        public async Task<ActionResult<FlashcardResponse>> UpdateFlashcard(int flashcardId, [FromBody] UpdateFlashcardDTO updateFlashcardDTO) 
-        { 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
-            if (userId == null) 
-            { 
-                return Unauthorized("Usuario no autorizado."); 
+        [HttpPut("update/{flashcardId}")]
+        public async Task<ActionResult<FlashcardResponse>> UpdateFlashcard(int flashcardId, [FromBody] UpdateFlashcardDTO updateFlashcardDTO)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("Usuario no autorizado.");
             }
-            
-            try 
-            { 
-                var response = await _flashcardService.UpdateFlashcardAsync(updateFlashcardDTO, int.Parse(userId), flashcardId); 
-                return Ok(response); 
-            } 
-            catch (InvalidOperationException ex) 
-            { 
-                return NotFound(ex.Message); 
-            } catch (Exception ex) 
-            { 
-                return StatusCode(500, $"Error al actualizar el contenido de la flashcard: {ex.Message}"); 
-            } 
+
+            try
+            {
+                var response = await _flashcardService.UpdateFlashcardAsync(updateFlashcardDTO, int.Parse(userId), flashcardId);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al actualizar el contenido de la flashcard: {ex.Message}");
+            }
         }
     }
 }

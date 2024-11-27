@@ -1,10 +1,8 @@
 ﻿
 using Application.Contracts;
-using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace WebAPI.Controllers
@@ -57,7 +55,7 @@ namespace WebAPI.Controllers
 
             try
             {
-               var resources = await material.GetAllResources();
+                var resources = await material.GetAllResources();
                 return Ok(resources);
             }
             catch (Exception ex)

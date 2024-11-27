@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Application.Contracts;
+﻿using Application.Contracts;
 using Application.DTOS;
 using Application.DTOS.Responses;
-using Infrastructure.Repo;
-using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -38,7 +36,7 @@ namespace WebAPI.Controllers
             try
             {
                 var exams = await _studiaDBContext.Resumes
-                    .Where(n => n.id_user_id == int.Parse(userId) )
+                    .Where(n => n.id_user_id == int.Parse(userId))
                     .ToListAsync();
 
                 return Ok(exams);
@@ -95,26 +93,28 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("update/{resumeId}")] 
-        public async Task<ActionResult<ResumeResponse>> UpdateResume(int resumeId, [FromBody] UpdateResumeDTO updateResumeDTO) 
-        { 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+        [HttpPut("update/{resumeId}")]
+        public async Task<ActionResult<ResumeResponse>> UpdateResume(int resumeId, [FromBody] UpdateResumeDTO updateResumeDTO)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId == null) 
-            { 
-                return Unauthorized("Usuario no autorizado."); 
-            } 
-            try 
-            { 
-                var response = await _resumeService.UpdateResumeAsync(updateResumeDTO, int.Parse(userId), resumeId); 
+            if (userId == null)
+            {
+                return Unauthorized("Usuario no autorizado.");
+            }
+            try
+            {
+                var response = await _resumeService.UpdateResumeAsync(updateResumeDTO, int.Parse(userId), resumeId);
                 return Ok(response);
-            } 
-            catch (InvalidOperationException ex) 
-            { 
-                return NotFound(ex.Message); 
-            } 
-            catch (Exception ex) { return StatusCode(500, $"Error al actualizar el contenido del resumen: {ex.Message}");
-            } 
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al actualizar el contenido del resumen: {ex.Message}");
+            }
         }
     }
 }
